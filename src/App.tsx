@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import type { Card } from './types/entidades';
 import { Cabecalho } from './componentes/Cabecalho';
 import { Rodape } from './componentes/Rodape';
 import { CartaoCard } from './componentes/CartaoCard';
+import { FormularioCard } from './componentes/FormularioCard';
 
 const revisarLayout: Card = {
   id: 1,
@@ -21,11 +23,21 @@ const corrigirBug: Card = {
 };
 
 export default function App() {
+  const [cards, setCards] = useState<Card[]>([revisarLayout, corrigirBug]);
+
+  function aoCriarCard(novoCard: Card) {
+    setCards((cardsAtuais) => [...cardsAtuais, novoCard]);
+  }
+
+  const proximoId = Math.max(...cards.map((card) => card.id)) + 1;
+
   return (
     <main>
       <Cabecalho />
-      <CartaoCard card={revisarLayout} />
-      <CartaoCard card={corrigirBug} />
+      <FormularioCard proximoId={proximoId} aoCriarCard={aoCriarCard} />
+      {cards.map((card) => (
+        <CartaoCard key={card.id} card={card} />
+      ))}
       <Rodape />
     </main>
   );
